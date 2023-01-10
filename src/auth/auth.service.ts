@@ -1,5 +1,5 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
@@ -44,7 +44,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new ForbiddenException('Invalid credentials');
+      throw new NotFoundException('User not found');
     }
 
     const valid = await argon.verify(user.hash, dto.password);
